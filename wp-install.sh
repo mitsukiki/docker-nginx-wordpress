@@ -6,7 +6,7 @@ wp config create --dbname=myapp --dbuser=user --dbpass=userpassword --dbhost=db 
 
 # WordPressセットアップ admin_user,admin_passwordは管理画面のログインID,PW
 wp core install \
---url='http://localhost:80' \
+--url='http://localhost' \
 --title='サイトのタイトル' \
 --admin_user='wordpress' \
 --admin_password='wordpress' \
