@@ -1,0 +1,24 @@
+{
+	"name": "PHP & MySQL",
+	"dockerComposeFile": [
+		"../docker-compose.yml"
+	],
+	"service": "php",
+	"workspaceFolder": "/var/www/html",
+    "customizations": {
+        "vscode":{
+            "extensions":[
+                "bradlc.vscode-tailwindcss",
+                "csstools.postcss",
+                "formulahendry.auto-rename-tag",
+                "oderwat.indent-rainbow",
+                "PKief.material-icon-theme",
+				"bmewburn.vscode-intelephense-client",
+				"zignd.html-css-class-completion",
+				"wordpresstoolbox.wordpress-toolbox",
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode"
+            ]
+        }
+    }
+}
