@@ -1,7 +1,6 @@
-
 services:
   db:
-    image: mysql:5.7
+    image: mysql:${MYSQL_VERSION:-8.0}
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: myapp
@@ -9,6 +8,12 @@ services:
       MYSQL_PASSWORD: userpassword
     volumes:
       - ./mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-p$$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
   web:
     image: nginx:latest
@@ -18,7 +23,9 @@ services:
       - ./www:/var/www/html
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - php
+      php:
+        condition: service_healthy
+
 
   php:
     build: 
@@ -26,11 +33,25 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./wp-install.sh:/tmp/wp-install.sh
+      - ./wordpress-theme-test-data-ja.xml:/tmp/wordpress-theme-test-data-ja.xml
+      - ./wordpress-theme-test-data.xml:/tmp/wordpress-theme-test-data.xml
       - ./www:/var/www/html
       - ./custom.ini:/usr/local/etc/php/conf.d/custom.ini
     depends_on:
-      - db
-
+      db:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "
+        sh /tmp/wp-install.sh &&
+        docker-php-entrypoint php-fpm 
+      "
+    healthcheck:
+      test: ["CMD", "test", "-f", ".wordpress_set"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+      
 
 
 volumes:

@@ -1,4 +1,11 @@
-#!/bin/bash
+#!/bin/sh
+
+sudo chown 1000:1000 -R /var/www/html
+
+FLAG_FILE="/var/www/html/.wordpress_set"
+
+if [ ! -f "$FLAG_FILE" ]; then
+echo "Setting WordPress for the first time..."
 
 wp core download 
 
@@ -31,7 +38,7 @@ wp plugin delete akismet
 # プラグインのインストール (必要に応じてコメントアウトを外す)
 # wp plugin install wp-multibyte-patch --activate 
 # wp plugin install show-current-template --activate 
-# wp plugin install wordpress-importer --activate 
+wp plugin install wordpress-importer --activate 
 wp plugin install wpvivid-backuprestore --activate 
 # wp plugin install backwpup --activate 
 # wp plugin install siteguard --activate 
@@ -47,10 +54,16 @@ wp theme delete twentytwentytwo
 
 # ダミー投稿・固定ページ追加
 # wp import wordpress-theme-test-data.xml --authors=create 
-# wp import wordpress-theme-test-data-ja.xml --authors=create 
+wp import /tmp/wordpress-theme-test-data-ja.xml --authors=create 
 
 # デフォルトの投稿を削除
 wp post delete 1 2 3 --force 
 
 # パーマリンク更新
 wp option update permalink_structure /%category%/%post_id%/ 
+
+touch "$FLAG_FILE"
+echo "WordPress set and flag file created."
+else
+echo "WordPress already set. Skipping..."
+fi

@@ -32,7 +32,6 @@ ENV PATH="/usr/local/bin:${PATH}"
 
 # ワークディレクトリの設定と所有者の変更
 WORKDIR /var/www/html
-RUN chown ${USERNAME}:${USERNAME} /var/www/html
 
 # ユーザーの切り替え
 USER $USERNAME
