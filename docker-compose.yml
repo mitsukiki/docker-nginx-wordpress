@@ -1,24 +1,24 @@
 services:
   db:
-    image: mysql:${MYSQL_VERSION:-8.0}
+    image: mysql:${MYSQL_VERSION}
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: myapp
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - ./mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-p$$MYSQL_PASSWORD"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 40s
 
   web:
-    image: nginx:latest
+    image: nginx:${NGINX_VERSION}
     ports:
-      - "80:80"
+      - "${WEB_PORT}:80"
     volumes:
       - ./www:/var/www/html
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
@@ -26,11 +26,15 @@ services:
       php:
         condition: service_healthy
 
-
   php:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+        USERNAME: ${USERNAME}
+        USER_UID: ${USER_UID}
+        USER_GID: ${USER_GID}
     volumes:
       - ./wp-install.sh:/tmp/wp-install.sh
       - ./wordpress-theme-test-data-ja.xml:/tmp/wordpress-theme-test-data-ja.xml
@@ -40,10 +44,22 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      - USER_UID=${USER_UID}
+      - USER_GID=${USER_GID}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - WP_VERSION=${WP_VERSION}
+      - WP_ADMIN_USER=${WP_ADMIN_USER}
+      - WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD}
+      - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
+      - WP_SITE_TITLE=${WP_SITE_TITLE}
+      - WP_SITE_URL=${WP_SITE_URL}
     entrypoint: >
       sh -c "
         sh /tmp/wp-install.sh &&
-        docker-php-entrypoint php-fpm 
+        docker-php-entrypoint php-fpm
       "
     healthcheck:
       test: ["CMD", "test", "-f", ".wordpress_set"]
@@ -51,8 +67,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
-      
-
 
 volumes:
   mysql_data:

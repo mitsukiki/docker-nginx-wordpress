@@ -1,10 +1,11 @@
 {
-	"name": "PHP & MySQL",
+	"name": "WordPress",
 	"dockerComposeFile": [
 		"../docker-compose.yml"
 	],
 	"service": "php",
 	"workspaceFolder": "/var/www/html",
+    "postStartCommand": "bash",
     "customizations": {
         "vscode":{
             "extensions":[
