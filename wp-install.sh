@@ -20,40 +20,54 @@ if [ ! -f "$FLAG_FILE" ]; then
         --admin_email="$WP_ADMIN_EMAIL"
 
     # タイムゾーンと日時表記
-    wp option update timezone_string 'Asia/Tokyo' 
-    wp option update date_format 'Y-m-d' 
-    wp option update time_format 'H:i' 
+    wp option update timezone_string 'Asia/Tokyo'
+    wp option update date_format 'Y-m-d'
+    wp option update time_format 'H:i'
 
     # キャッチフレーズの設定 (空にする)
-    wp option update blogdescription '' 
+    wp option update blogdescription ''
 
     # デフォルトの投稿を削除
     wp plugin delete hello.php
     wp plugin delete akismet
 
     # パーマリンク更新
-    wp option update permalink_structure /%category%/%post_id%/ 
+    wp option update permalink_structure /%category%/%post_id%/
 
     # プラグインのインストール (必要に応じてコメントアウトを外す)
-    # wp plugin install wp-multibyte-patch --activate 
-    # wp plugin install show-current-template --activate 
-    wp plugin install wordpress-importer --activate 
-    wp plugin install wpvivid-backuprestore --activate 
-    # wp plugin install backwpup --activate 
-    # wp plugin install siteguard --activate 
-    # wp plugin install contact-form-7 --activate 
-    # wp plugin install wp-mail-smtp --activate 
-    # wp plugin install all-in-one-seo-pack --activate 
-    # wp plugin install broken-link-checker --activate 
-    # wp plugin install addquicktag --activate 
+    # wp plugin install wp-multibyte-patch --activate
+    # wp plugin install show-current-template --activate
+    wp plugin install wordpress-importer --activate
+    wp plugin install wpvivid-backuprestore --activate
+    # wp plugin install backwpup --activate
+    # wp plugin install siteguard --activate
+    # wp plugin install contact-form-7 --activate
+    # wp plugin install wp-mail-smtp --activate
+    # wp plugin install all-in-one-seo-pack --activate
+    # wp plugin install broken-link-checker --activate
+    # wp plugin install addquicktag --activate
 
     # テーマの削除
-    wp theme delete twentytwentythree 
-    wp theme delete twentytwentytwo 
+    wp theme delete twentytwentythree
+    wp theme delete twentytwentytwo
 
     # ダミー投稿・固定ページ追加
-    # wp import wordpress-theme-test-data.xml --authors=create 
-    wp import /tmp/wordpress-theme-test-data-ja.xml --authors=create 
+    # wp import wordpress-theme-test-data.xml --authors=create
+    # wp import /tmp/wordpress-theme-test-data-ja.xml --authors=create
+
+    # 現在の設定を取得
+    current_setting=$(wp option get wpvivid_common_setting --format=json)
+
+    echo "wpvivid_common_setting現在の設定:"
+    wp option get wpvivid_common_setting
+
+    new_setting=$(echo $current_setting | jq '.memory_limit = "1024M" | .max_execution_time = 3000 | .restore_max_execution_time = 3000 | .restore_memory_limit = "1024M"')
+
+    # 更新された設定をWPデータベースに保存
+    wp option update wpvivid_common_setting "$new_setting" --format=json
+
+    echo "wpvivid_common_setting更新後の設定:"
+    wp option get wpvivid_common_setting
 
     touch "$FLAG_FILE"
     echo "WordPress set and flag file created."
