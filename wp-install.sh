@@ -39,6 +39,7 @@ if [ ! -f "$FLAG_FILE" ]; then
     # wp plugin install show-current-template --activate
     wp plugin install wordpress-importer --activate
     wp plugin install wpvivid-backuprestore --activate
+    wp plugin install /tmp/advanced-custom-fields-pro.zip --activate
     # wp plugin install backwpup --activate
     # wp plugin install siteguard --activate
     # wp plugin install contact-form-7 --activate
@@ -58,20 +59,17 @@ if [ ! -f "$FLAG_FILE" ]; then
     # wp import wordpress-theme-test-data.xml --authors=create
     # wp import /tmp/wordpress-theme-test-data-ja.xml --authors=create
 
-    # 現在の設定を取得
+    #Wpvivid設定変更
     current_setting=$(wp option get wpvivid_common_setting --format=json)
-
-    echo "wpvivid_common_setting現在の設定:"
-    wp option get wpvivid_common_setting
 
     new_setting=$(echo $current_setting | jq '.memory_limit = "1024M" | .max_execution_time = 3000 | .restore_max_execution_time = 3000 | .restore_memory_limit = "1024M"')
 
-    # 更新された設定をWPデータベースに保存
     wp option update wpvivid_common_setting "$new_setting" --format=json
 
-    echo "wpvivid_common_setting更新後の設定:"
-    wp option get wpvivid_common_setting
-
+        #ACF設定変更
+    if [ -n "$WP_ACF_LICENSE_KEY" ]; then
+        wp option update acf_pro_license "$WP_ACF_LICENSE_KEY"
+    fi
     touch "$FLAG_FILE"
     echo "WordPress set and flag file created."
 else

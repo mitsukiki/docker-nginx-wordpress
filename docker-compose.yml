@@ -47,6 +47,7 @@ services:
         USER_GID: ${USER_GID}
     volumes:
       - ./wp-install.sh:/tmp/wp-install.sh
+      - ./advanced-custom-fields-pro.zip:/tmp/advanced-custom-fields-pro.zip
       - ./wordpress-theme-test-data-ja.xml:/tmp/wordpress-theme-test-data-ja.xml
       - ./wordpress-theme-test-data.xml:/tmp/wordpress-theme-test-data.xml
       - ./www:/var/www/html
@@ -66,6 +67,7 @@ services:
       - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
       - WP_SITE_TITLE=${WP_SITE_TITLE}
       - WP_SITE_URL=${WP_SITE_URL}
+      - WP_ACF_LICENSE_KEY=${WP_ACF_LICENSE_KEY}
     entrypoint: >
       sh -c "
         sh /tmp/wp-install.sh &&
