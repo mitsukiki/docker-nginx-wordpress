@@ -48,6 +48,9 @@ if [ ! -f "$FLAG_FILE" ]; then
     # wp plugin install broken-link-checker --activate
     # wp plugin install addquicktag --activate
 
+    # プラグインアップデート
+    wp plugin update advanced-custom-fields-pro
+
     # プラグインの日本語化
     wp language plugin install ja --all
 
