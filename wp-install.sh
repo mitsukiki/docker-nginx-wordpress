@@ -47,6 +47,9 @@ if [ ! -f "$FLAG_FILE" ]; then
     # wp plugin install broken-link-checker --activate
     # wp plugin install addquicktag --activate
 
+    # プラグインの日本語化
+    wp language plugin install ja --all
+
     # テーマの削除
     wp theme delete twentytwentythree
     wp theme delete twentytwentytwo
