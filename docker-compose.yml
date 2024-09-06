@@ -45,6 +45,8 @@ services:
         USERNAME: ${USERNAME}
         USER_UID: ${USER_UID}
         USER_GID: ${USER_GID}
+    ports:
+      - "5173:5173"  # Viteのポートを公開
     volumes:
       - ./wp-install.sh:/tmp/wp-install.sh
       - ./advanced-custom-fields-pro.zip:/tmp/advanced-custom-fields-pro.zip
