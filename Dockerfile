@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libzip-dev \
     jq \
+    nodejs npm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql zip
 
