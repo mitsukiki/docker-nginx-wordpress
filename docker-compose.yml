@@ -46,7 +46,7 @@ services:
         USER_UID: ${USER_UID}
         USER_GID: ${USER_GID}
     ports:
-      - "5173:5173"  # Viteのポートを公開
+      - "${VITE_PORT}:5173"  # Viteのポートを公開
     volumes:
       - ./wp-install.sh:/tmp/wp-install.sh
       - ./advanced-custom-fields-pro.zip:/tmp/advanced-custom-fields-pro.zip
@@ -90,7 +90,7 @@ services:
       PMA_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
-      - "8080:80"
+      - "${PMA_PORT}:80"
     depends_on:
       - db
 
