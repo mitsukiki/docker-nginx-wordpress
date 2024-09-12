@@ -69,6 +69,7 @@ services:
       - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
       - WP_SITE_TITLE=${WP_SITE_TITLE}
       - WP_SITE_URL=${WP_SITE_URL}
+      - WP_THEME_NAME=${WP_THEME_NAME}
       - WP_ACF_LICENSE_KEY=${WP_ACF_LICENSE_KEY}
     entrypoint: >
       sh -c "
