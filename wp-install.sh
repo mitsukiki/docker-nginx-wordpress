@@ -39,6 +39,9 @@ if [ ! -f "$FLAG_FILE" ]; then
     # wp plugin install show-current-template --activate
     wp plugin install wordpress-importer --activate
     wp plugin install wpvivid-backuprestore --activate
+    wp plugin install debug-bar --activate
+    wp plugin install query-monitor --activate
+    wp plugin install theme-check --activate
     wp plugin install /tmp/advanced-custom-fields-pro.zip --activate
     # wp plugin install backwpup --activate
     # wp plugin install siteguard --activate
