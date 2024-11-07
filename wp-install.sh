@@ -44,6 +44,7 @@ if [ ! -f "$FLAG_FILE" ]; then
     wp plugin install theme-check --activate
     wp plugin install search-regex --activate
     wp plugin install rewrite-rules-inspector --activate
+    wp plugin install duplicate-post --activate
     wp plugin install /tmp/advanced-custom-fields-pro.zip --activate
     # wp plugin install backwpup --activate
     # wp plugin install siteguard --activate
